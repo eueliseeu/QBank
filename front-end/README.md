@@ -1,105 +1,175 @@
+# QBank Client - Front-end
 
-# AppBank
+Interface desktop em Java Swing para sistema bancário, permitindo gestão completa de contas e transações através de comunicação com API REST.
 
-AppBank é um sistema bancário simples desenvolvido em Java utilizando Maven como gerenciador de dependências. Este projeto possui suporte para manipulação de dados em formato JSON e utiliza a linguagem Java versão 17 com recursos habilitados de prévia (`--enable-preview`).
+## Tecnologias
 
----
+- **Java 17** (com recursos preview habilitados)
+- **Java Swing** - Framework GUI para interface desktop
+- **HttpClient** - Cliente HTTP nativo do Java
+- **Gson 2.8.9** - Serialização/Desserialização JSON
+- **JSON.org** - Manipulação de dados JSON
+- **Maven** - Gerenciamento de dependências
 
-## **Pré-requisitos**
+## Arquitetura
 
-Antes de executar o sistema, certifique-se de que você tem os seguintes requisitos instalados em sua máquina:
-
-1. **Java Development Kit (JDK) 17** ou superior.
-   - Verifique a instalação com o comando:
-     ```bash
-     java -version
-     ```
-     Certifique-se de que a versão exibida é pelo menos 17.
-2. **Maven** (Gerenciador de dependências e build do projeto).
-   - Verifique a instalação com o comando:
-     ```bash
-     mvn -v
-     ```
-
-3. **Git** (para clonar o repositório, opcional).
-   - Verifique a instalação com o comando:
-     ```bash
-     git --version
-     ```
-
----
-
-## **Como configurar e executar o projeto**
-
-### 1. Clone o repositório
-Utilize o Git para clonar o repositório do projeto ou baixe-o diretamente como um arquivo ZIP.
-
-```bash
-git clone https://github.com/seu-usuario/AppBank.git
-cd AppBank
+```
+src/main/java/com/atividade/appbank/
+├── AccountUser/        # Interfaces gráficas do usuário
+│   ├── InterfaceUserLog.java      # Tela principal pós-login
+│   ├── CreateAccount.java         # Criação de conta
+│   ├── InfoUser.java             # Informações do usuário
+│   ├── TransferUser.java         # Realização de transferências
+│   └── NumericLimitFilter.java   # Validação de entrada
+└── API/               # Comunicação com back-end
+    └── API.java       # Cliente HTTP
 ```
 
-### 2. Compile e instale as dependências
-O Maven irá gerenciar as dependências listadas no arquivo `pom.xml`. Execute o seguinte comando na raiz do projeto:
+## Funcionalidades
+
+### Interface de Usuário
+
+- Login com agência e número da conta
+- Visualização de saldo e dados cadastrais
+- Criação de novas contas
+- Edição de informações pessoais
+- Consulta de extrato
+- Realização de transferências (PIX e TED)
+- Atualização automática de saldo
+- Validação de campos numéricos
+
+### Integração com API
+
+- Comunicação HTTP com back-end QBank
+- Serialização/Desserialização de objetos JSON
+- Tratamento de respostas e erros
+- Sincronização de dados em tempo real
+
+## Requisitos
+
+- **JDK 17** ou superior
+- **Maven 3.6+**
+- **QBank API** executando em `http://localhost:8080`
+
+## Execução
+
+### Iniciar aplicação
 
 ```bash
 mvn clean install
-```
-
-Este comando irá:
-- Limpar qualquer build anterior.
-- Baixar e instalar as dependências necessárias.
-- Compilar o código.
-
----
-
-### 3. Execute o sistema
-O arquivo `pom.xml` está configurado com o **Main-Class** definida como `com.atividade.appbank.AppBank`. Para executar a aplicação, utilize:
-
-```bash
 mvn exec:java
 ```
 
----
+Ou usando o Maven wrapper:
 
-## **Estrutura do Projeto**
+```bash
+mvn compile exec:java -Dexec.mainClass="com.atividade.appbank.AppBank"
+```
 
-### Diretórios principais:
-- `src/main/java` - Contém o código-fonte do sistema.
-- `src/test/java` - Contém testes unitários e de integração (caso aplicável).
-- `pom.xml` - Arquivo de configuração Maven, que define dependências e propriedades do projeto.
+### Configuração
 
----
+Certifique-se de que a API do QBank está executando antes de iniciar o cliente:
 
-## **Dependências do projeto**
+```bash
+cd ../back-end
+./mvnw mn:run
+```
 
-O AppBank utiliza as seguintes bibliotecas externas:
+## Fluxo de Uso
 
-1. **org.jsonx:json (v0.2.2)**
-    - Biblioteca para manipulação de objetos JSON.
-    - Documentação: [JSONx](https://jsonx.org).
+1. **Login**
 
-2. **org.codeartisans:org.json (v20161124)**
-    - Outra biblioteca para trabalhar com JSON.
-    - Documentação: [JSON](https://github.com/stleary/JSON-java).
+   - Insira agência e número da conta
+   - Sistema autentica via API REST
 
----
+2. **Tela Principal**
 
-## **Configuração de Build**
+   - Visualize saldo atual
+   - Acesse funcionalidades através do menu
 
-- **Java Compiler Version:** 17
-- **Preview Features:** Habilitado (`--enable-preview`).
+3. **Operações Disponíveis**
 
----
+   - Consultar informações da conta
+   - Realizar transferências
+   - Visualizar extrato
+   - Editar dados cadastrais
 
-## **Como testar**
+4. **Transferências**
+   - Selecione tipo (PIX ou TED)
+   - Informe dados da conta destino
+   - Digite o valor
+   - Confirme operação
 
-Após realizar o build, você pode verificar o funcionamento da aplicação utilizando:
+## Estrutura de Telas
 
-1. **Maven Tests**  
-   Execute todos os testes disponíveis no projeto:
-   ```bash
-   mvn test
-   ```
-   
-Esse sistema utilza API.
+### InterfaceUserLog (Tela Principal)
+
+- Exibição de saldo
+- Menu de navegação
+- Atualização automática de dados
+- Acesso às demais funcionalidades
+
+### CreateAccount (Criação de Conta)
+
+- Formulário de dados pessoais
+- Seleção de tipo de conta
+- Validação de CPF e campos
+- Integração com API para cadastro
+
+### InfoUser (Informações do Usuário)
+
+- Visualização de dados cadastrais
+- Edição de informações
+- Atualização via API
+
+### TransferUser (Transferências)
+
+- Formulário de transferência
+- Seleção de tipo de transação
+- Validação de valores
+- Confirmação e execução
+
+## Padrões e Boas Práticas
+
+- **MVC Adaptado** - Separação entre UI e lógica de negócio
+- **Componentização** - Telas modulares e reutilizáveis
+- **Validação de Entrada** - Filtros customizados para campos
+- **Tratamento de Exceções** - Gerenciamento robusto de erros
+- **Clean Code** - Código organizado e legível
+
+## Dependências (pom.xml)
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.jsonx</groupId>
+        <artifactId>json</artifactId>
+        <version>0.2.2</version>
+    </dependency>
+    <dependency>
+        <groupId>org.codeartisans</groupId>
+        <artifactId>org.json</artifactId>
+        <version>20161124</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.9</version>
+    </dependency>
+</dependencies>
+```
+
+## Recursos Preview Java 17
+
+O projeto utiliza recursos preview do Java 17, habilitados através do argumento:
+
+```xml
+<compilerArgs>
+    --enable-preview
+</compilerArgs>
+```
+
+## Autores
+
+- [Ronie Soares](https://github.com/Ronie-Soares)
+- [Euelis Eeu](https://github.com/eueliseeu)
